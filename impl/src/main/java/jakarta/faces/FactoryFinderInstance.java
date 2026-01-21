@@ -367,13 +367,17 @@ final class FactoryFinderInstance {
                     }
                 }
             }
-        } catch (IOException | SecurityException e) {
+        } catch (IOException e) {
+            if (LOGGER.isLoggable(SEVERE)) {
+                LOGGER.log(SEVERE, e.toString(), e);
+            }
+        } catch (SecurityException e) {
             if (LOGGER.isLoggable(SEVERE)) {
                 LOGGER.log(SEVERE, e.toString(), e);
             }
         }
 
-        return implementationNames;
+		return implementationNames;
     }
 
     /**
@@ -413,11 +417,20 @@ final class FactoryFinderInstance {
             } catch (NoSuchMethodException nsme) {
                 // fall through to "zero-arg-ctor" case
                 factoryClass = null;
-            } catch (ClassNotFoundException | SecurityException | InstantiationException | IllegalAccessException | IllegalArgumentException
-                    | InvocationTargetException e) {
+            } catch (ClassNotFoundException e) {
+                throw new FacesException(factoryImplClassName, e);
+            } catch (SecurityException e) {
+                throw new FacesException(factoryImplClassName, e);
+            } catch (InstantiationException e) {
+                throw new FacesException(factoryImplClassName, e);
+            } catch (IllegalAccessException e) {
+                throw new FacesException(factoryImplClassName, e);
+            } catch (IllegalArgumentException e) {
+                throw new FacesException(factoryImplClassName, e);
+            } catch (InvocationTargetException e) {
                 throw new FacesException(factoryImplClassName, e);
             }
-        }
+		}
 
         if (isAnyNull(previousFactoryImplementation, factoryClass)) {
 
@@ -431,10 +444,14 @@ final class FactoryFinderInstance {
                 factoryImplementation = Class.forName(factoryImplClassName, false, classLoader).getDeclaredConstructor()
                         .newInstance();
 
-            } catch (IllegalArgumentException | ReflectiveOperationException | SecurityException e) {
+            } catch (IllegalArgumentException e) {
+                throw new FacesException(factoryImplClassName, e);
+            } catch (ReflectiveOperationException e) {
+                throw new FacesException(factoryImplClassName, e);
+            } catch (SecurityException e) {
                 throw new FacesException(factoryImplClassName, e);
             }
-        }
+		}
 
         injectImplementation(factoryImplClassName, factoryImplementation);
 

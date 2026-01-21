@@ -68,12 +68,24 @@ final class ServletContextFacesContextFactory extends FacesContextFactory {
             initContextServletContextMapField.setAccessible(true);
             initContextServletContextMap = (ConcurrentHashMap<FacesContext, ServletContext>) initContextServletContextMapField.get(null);
 
-        } catch (IllegalAccessException | IllegalArgumentException | NoSuchFieldException | SecurityException ex) {
+        } catch (IllegalAccessException ex) {
+            if (LOGGER.isLoggable(Level.SEVERE)) {
+                LOGGER.log(Level.SEVERE, "Unable to access instance field of FacesContext", ex);
+            }
+        } catch (IllegalArgumentException ex) {
+            if (LOGGER.isLoggable(Level.SEVERE)) {
+                LOGGER.log(Level.SEVERE, "Unable to access instance field of FacesContext", ex);
+            }
+        } catch (NoSuchFieldException ex) {
+            if (LOGGER.isLoggable(Level.SEVERE)) {
+                LOGGER.log(Level.SEVERE, "Unable to access instance field of FacesContext", ex);
+            }
+        } catch (SecurityException ex) {
             if (LOGGER.isLoggable(Level.SEVERE)) {
                 LOGGER.log(Level.SEVERE, "Unable to access instance field of FacesContext", ex);
             }
         }
-    }
+	}
 
     /**
      * This method does what FacesContext.getCurrentInstance() did *before* the fix for Bug 20458755.

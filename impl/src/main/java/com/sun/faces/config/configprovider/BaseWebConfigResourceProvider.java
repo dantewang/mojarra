@@ -88,11 +88,13 @@ public abstract class BaseWebConfigResourceProvider implements ConfigurationReso
             if (url != null) {
                 return new URI(url.toExternalForm().replaceAll(" ", "%20"));
             }
-        } catch (MalformedURLException | URISyntaxException mue) {
+        } catch (MalformedURLException mue) {
+            throw new FacesException(mue);
+        } catch (URISyntaxException mue) {
             throw new FacesException(mue);
         }
 
-        return null;
+		return null;
     }
 
     protected boolean isExcluded(String path) {

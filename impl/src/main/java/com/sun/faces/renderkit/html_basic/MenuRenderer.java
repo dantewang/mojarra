@@ -671,14 +671,19 @@ public class MenuRenderer extends HtmlBasicInputRenderer {
         try {
             ExpressionFactory ef = ctx.getApplication().getExpressionFactory();
             newValue = ef.coerceToType(value, itemValueType);
-        } catch (ELException | IllegalArgumentException ele) {
+        } catch (ELException ele) {
+            // If coerceToType fails, per the docs it should throw
+            // an ELException, however, GF 9.0 and 9.0u1 will throw
+            // an IllegalArgumentException instead (see GF issue 1527).
+            newValue = value;
+        } catch (IllegalArgumentException ele) {
             // If coerceToType fails, per the docs it should throw
             // an ELException, however, GF 9.0 and 9.0u1 will throw
             // an IllegalArgumentException instead (see GF issue 1527).
             newValue = value;
         }
 
-        return newValue;
+		return newValue;
 
     }
 
@@ -700,12 +705,20 @@ public class MenuRenderer extends HtmlBasicInputRenderer {
         if (!lookupClass.isInterface() && !isAbstract(lookupClass.getModifiers())) {
             try {
                 return (Collection<Object>) lookupClass.getDeclaredConstructor().newInstance();
-            } catch (IllegalArgumentException | ReflectiveOperationException | SecurityException e) {
+            } catch (IllegalArgumentException e) {
+                if (logger.isLoggable(SEVERE)) {
+                    logger.log(SEVERE, "Unable to create new Collection instance for type " + lookupClass.getName(), e);
+                }
+            } catch (ReflectiveOperationException e) {
+                if (logger.isLoggable(SEVERE)) {
+                    logger.log(SEVERE, "Unable to create new Collection instance for type " + lookupClass.getName(), e);
+                }
+            } catch (SecurityException e) {
                 if (logger.isLoggable(SEVERE)) {
                     logger.log(SEVERE, "Unable to create new Collection instance for type " + lookupClass.getName(), e);
                 }
             }
-        }
+		}
 
         return null;
     }
@@ -736,13 +749,23 @@ public class MenuRenderer extends HtmlBasicInputRenderer {
                     clonedCollected.clear();
 
                     return clonedCollected;
-                } catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {
+                } catch (IllegalAccessException e) {
+                    if (logger.isLoggable(SEVERE)) {
+                        logger.log(SEVERE, "Unable to clone collection type: {0}", value.getClass().getName());
+                        logger.log(SEVERE, e.toString(), e);
+                    }
+                } catch (IllegalArgumentException e) {
+                    if (logger.isLoggable(SEVERE)) {
+                        logger.log(SEVERE, "Unable to clone collection type: {0}", value.getClass().getName());
+                        logger.log(SEVERE, e.toString(), e);
+                    }
+                } catch (InvocationTargetException e) {
                     if (logger.isLoggable(SEVERE)) {
                         logger.log(SEVERE, "Unable to clone collection type: {0}", value.getClass().getName());
                         logger.log(SEVERE, e.toString(), e);
                     }
                 }
-            } else {
+			} else {
                 // No public clone method
                 if (logger.isLoggable(FINE)) {
                     logger.log(FINE, "Type {0} implements Cloneable, but has no public clone method.", value.getClass().getName());

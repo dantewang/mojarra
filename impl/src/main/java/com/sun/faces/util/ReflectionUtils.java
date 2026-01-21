@@ -89,10 +89,16 @@ public final class ReflectionUtils {
                 availableProperties.get(propertyToSet.getKey()).getWriteMethod().invoke(object, propertyToSet.getValue());
             }
 
-        } catch (IntrospectionException | IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {
+        } catch (IntrospectionException e) {
+            throw new IllegalStateException(e);
+        } catch (IllegalAccessException e) {
+            throw new IllegalStateException(e);
+        } catch (IllegalArgumentException e) {
+            throw new IllegalStateException(e);
+        } catch (InvocationTargetException e) {
             throw new IllegalStateException(e);
         }
-    }
+	}
 
     /**
      * Sets a collection of properties of a given object to the (optionally coerced) values associated with those
@@ -250,10 +256,14 @@ public final class ReflectionUtils {
     public static <T> T instance(Class<T> clazz) {
         try {
             return clazz.getDeclaredConstructor().newInstance();
-        } catch (IllegalArgumentException | ReflectiveOperationException | SecurityException e) {
+        } catch (IllegalArgumentException e) {
+            throw new IllegalStateException(e);
+        } catch (ReflectiveOperationException e) {
+            throw new IllegalStateException(e);
+        } catch (SecurityException e) {
             throw new IllegalStateException(e);
         }
-    }
+	}
 
     /**
      * <p>

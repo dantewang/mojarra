@@ -171,10 +171,14 @@ public final class DefaultFunctionMapper extends FunctionMapper implements Exter
                     Class<?> t = ReflectionUtil.forName(owner);
                     Class<?>[] p = ReflectionUtil.toTypeArray(types);
                     m = t.getMethod(name, p);
-                } catch (ClassNotFoundException | NoSuchMethodException | SecurityException e) {
+                } catch (ClassNotFoundException e) {
+                    e.printStackTrace();
+                } catch (NoSuchMethodException e) {
+                    e.printStackTrace();
+                } catch (SecurityException e) {
                     e.printStackTrace();
                 }
-            }
+			}
             return m;
         }
 

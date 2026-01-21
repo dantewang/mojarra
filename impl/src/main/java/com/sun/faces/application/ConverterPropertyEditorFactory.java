@@ -152,12 +152,24 @@ public class ConverterPropertyEditorFactory {
                 classNameConstant = findConstant(getVMClassName(templateClass));
                 classNameRefConstant = findConstant(new StringBuilder(64).append('L').append(getVMClassName(templateClass)).append(';').toString());
                 targetClassConstant = findConstant(getVMClassName(templateTargetClass));
-            } catch (IllegalArgumentException | ReflectiveOperationException | SecurityException | IOException e) {
+            } catch (IllegalArgumentException e) {
+                if (LOGGER.isLoggable(Level.FINE)) {
+                    LOGGER.log(Level.FINE, "Unexected exception ClassTemplateInfo", e);
+                }
+            } catch (ReflectiveOperationException e) {
+                if (LOGGER.isLoggable(Level.FINE)) {
+                    LOGGER.log(Level.FINE, "Unexected exception ClassTemplateInfo", e);
+                }
+            } catch (SecurityException e) {
+                if (LOGGER.isLoggable(Level.FINE)) {
+                    LOGGER.log(Level.FINE, "Unexected exception ClassTemplateInfo", e);
+                }
+            } catch (IOException e) {
                 if (LOGGER.isLoggable(Level.FINE)) {
                     LOGGER.log(Level.FINE, "Unexected exception ClassTemplateInfo", e);
                 }
             }
-        }
+		}
 
         /**
          * Check whether the <code>targetBytes</code> match the content of the <code>templateBytes</code> at the given

@@ -371,7 +371,19 @@ public final class DevTools {
                             writer.write(str.replaceAll("<", TS));
                             writer.write("\"");
                         }
-                    } catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException | IOException e) {
+                    } catch (IllegalAccessException e) {
+                        if (LOGGER.isLoggable(Level.FINEST)) {
+                            LOGGER.log(Level.FINEST, "Error writing out attribute", e);
+                        }
+                    } catch (IllegalArgumentException e) {
+                        if (LOGGER.isLoggable(Level.FINEST)) {
+                            LOGGER.log(Level.FINEST, "Error writing out attribute", e);
+                        }
+                    } catch (InvocationTargetException e) {
+                        if (LOGGER.isLoggable(Level.FINEST)) {
+                            LOGGER.log(Level.FINEST, "Error writing out attribute", e);
+                        }
+                    } catch (IOException e) {
                         if (LOGGER.isLoggable(Level.FINEST)) {
                             LOGGER.log(Level.FINEST, "Error writing out attribute", e);
                         }

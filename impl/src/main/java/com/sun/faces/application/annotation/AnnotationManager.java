@@ -295,7 +295,12 @@ public class AnnotationManager {
             }
             try {
                 return f.get();
-            } catch (CancellationException | InterruptedException ce) {
+            } catch (CancellationException ce) {
+                if (LOGGER.isLoggable(Level.FINEST)) {
+                    LOGGER.log(Level.FINEST, ce.toString(), ce);
+                }
+                cache.remove(targetClass);
+            } catch (InterruptedException ce) {
                 if (LOGGER.isLoggable(Level.FINEST)) {
                     LOGGER.log(Level.FINEST, ce.toString(), ce);
                 }

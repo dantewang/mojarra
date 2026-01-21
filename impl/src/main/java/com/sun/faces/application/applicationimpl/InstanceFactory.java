@@ -260,10 +260,14 @@ public class InstanceFactory {
                 if (!associate.isDevModeEnabled()) {
                     componentMap.put(className, ComponentResourceClassNotFound.class);
                 }
-            } catch (IllegalArgumentException | ReflectiveOperationException | SecurityException ie) {
+            } catch (IllegalArgumentException ie) {
+                throw new FacesException(ie);
+            } catch (ReflectiveOperationException ie) {
+                throw new FacesException(ie);
+            } catch (SecurityException ie) {
                 throw new FacesException(ie);
             }
-        }
+		}
 
         // Step 4. Use jakarta.faces.NamingContainer as the component type
         if (result == null) {
@@ -624,13 +628,21 @@ public class InstanceFactory {
                 componentMap.put(className, componentClass);
             }
             result = (UIComponent) componentClass.getDeclaredConstructor().newInstance();
-        } catch (IllegalArgumentException | ReflectiveOperationException | SecurityException ex) {
+        } catch (IllegalArgumentException ex) {
+            if (LOGGER.isLoggable(Level.SEVERE)) {
+                LOGGER.log(Level.SEVERE, null, ex);
+            }
+        } catch (ReflectiveOperationException ex) {
+            if (LOGGER.isLoggable(Level.SEVERE)) {
+                LOGGER.log(Level.SEVERE, null, ex);
+            }
+        } catch (SecurityException ex) {
             if (LOGGER.isLoggable(Level.SEVERE)) {
                 LOGGER.log(Level.SEVERE, null, ex);
             }
         }
 
-        if (result != null) {
+		if (result != null) {
             // Make sure the resource is there for the annotation processor.
             result.getAttributes().put(Resource.COMPONENT_RESOURCE_KEY, componentResource);
             // In case there are any "this" references,
@@ -1013,16 +1025,26 @@ public class InstanceFactory {
         if (ctor != null) {
             try {
                 result = ctor.newInstance(targetClass);
-            } catch (InstantiationException | IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {
+            } catch (InstantiationException e) {
+                cause = e;
+            } catch (IllegalAccessException e) {
+                cause = e;
+            } catch (IllegalArgumentException e) {
+                cause = e;
+            } catch (InvocationTargetException e) {
                 cause = e;
             }
-        } else {
+		} else {
             try {
                 result = clazz.getDeclaredConstructor().newInstance();
-            } catch (IllegalArgumentException | ReflectiveOperationException | SecurityException e) {
+            } catch (IllegalArgumentException e) {
+                cause = e;
+            } catch (ReflectiveOperationException e) {
+                cause = e;
+            } catch (SecurityException e) {
                 cause = e;
             }
-        }
+		}
 
         if (null != cause) {
             throw new FacesException(MessageUtils.getExceptionMessageString(MessageUtils.CANT_INSTANTIATE_CLASS_ERROR_MESSAGE_ID, clazz.getName()), cause);

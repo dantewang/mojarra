@@ -86,7 +86,14 @@ public abstract class JndiHandler implements RuntimeAnnotationHandler {
                 if (!fieldAccessible) {
                     field.setAccessible(false);
                 }
-            } catch (IllegalArgumentException | IllegalAccessException iae) {
+            } catch (IllegalArgumentException iae) {
+                if (LOGGER.isLoggable(Level.WARNING)) {
+                    LOGGER.log(Level.WARNING, "Unable to set field: " + field.getName(), iae);
+                }
+                if (facesContext.isProjectStage(ProjectStage.Development)) {
+                    facesContext.addMessage(null, new FacesMessage("Unable to set field: " + field.getName(), "Unable to set field: " + field.getName()));
+                }
+            } catch (IllegalAccessException iae) {
                 if (LOGGER.isLoggable(Level.WARNING)) {
                     LOGGER.log(Level.WARNING, "Unable to set field: " + field.getName(), iae);
                 }
@@ -94,7 +101,7 @@ public abstract class JndiHandler implements RuntimeAnnotationHandler {
                     facesContext.addMessage(null, new FacesMessage("Unable to set field: " + field.getName(), "Unable to set field: " + field.getName()));
                 }
             }
-        }
+		}
     }
 
     /**
@@ -112,7 +119,21 @@ public abstract class JndiHandler implements RuntimeAnnotationHandler {
                 method.setAccessible(false);
                 method.invoke(instance, value);
                 method.setAccessible(accessible);
-            } catch (InvocationTargetException | IllegalArgumentException | IllegalAccessException ite) {
+            } catch (InvocationTargetException ite) {
+                if (LOGGER.isLoggable(Level.WARNING)) {
+                    LOGGER.log(Level.WARNING, "Unable to call method: " + method.getName(), ite);
+                }
+                if (facesContext.isProjectStage(ProjectStage.Development)) {
+                    facesContext.addMessage(null, new FacesMessage("Unable to call method: " + method.getName(), "Unable to call method: " + method.getName()));
+                }
+            } catch (IllegalArgumentException ite) {
+                if (LOGGER.isLoggable(Level.WARNING)) {
+                    LOGGER.log(Level.WARNING, "Unable to call method: " + method.getName(), ite);
+                }
+                if (facesContext.isProjectStage(ProjectStage.Development)) {
+                    facesContext.addMessage(null, new FacesMessage("Unable to call method: " + method.getName(), "Unable to call method: " + method.getName()));
+                }
+            } catch (IllegalAccessException ite) {
                 if (LOGGER.isLoggable(Level.WARNING)) {
                     LOGGER.log(Level.WARNING, "Unable to call method: " + method.getName(), ite);
                 }
@@ -120,6 +141,6 @@ public abstract class JndiHandler implements RuntimeAnnotationHandler {
                     facesContext.addMessage(null, new FacesMessage("Unable to call method: " + method.getName(), "Unable to call method: " + method.getName()));
                 }
             }
-        }
+		}
     }
 }

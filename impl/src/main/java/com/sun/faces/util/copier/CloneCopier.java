@@ -49,10 +49,16 @@ public class CloneCopier implements Copier {
 
             return cloneMethod.invoke(object);
 
-        } catch (SecurityException | IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {
+        } catch (SecurityException e) {
+            throw new IllegalStateException(e);
+        } catch (IllegalAccessException e) {
+            throw new IllegalStateException(e);
+        } catch (IllegalArgumentException e) {
+            throw new IllegalStateException(e);
+        } catch (InvocationTargetException e) {
             throw new IllegalStateException(e);
         }
-    }
+	}
 
     private Method getMethod(Object object, String name) {
         for (Class<?> c = object.getClass(); c != null; c = c.getSuperclass()) {

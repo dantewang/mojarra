@@ -208,12 +208,16 @@ public class WebsocketSessionManager {
                 }
 
                 return result.get();
-            } catch (InterruptedException | ExecutionException e) {
+            } catch (InterruptedException e) {
+                Thread.currentThread().interrupt();
+                cause = e;
+                break;
+            } catch (ExecutionException e) {
                 Thread.currentThread().interrupt();
                 cause = e;
                 break;
             }
-        }
+		}
 
         throw new UnsupportedOperationException(format(ERROR_TOMCAT_WEB_SOCKET_BOMBED, retries), cause);
     }

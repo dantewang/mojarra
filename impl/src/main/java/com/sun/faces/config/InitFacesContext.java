@@ -209,11 +209,17 @@ public class InitFacesContext extends NoOpFacesContext {
             threadMap.setAccessible(true);
 
             return (Map<Thread, InitFacesContext>) threadMap.get(null);
-        } catch (NoSuchFieldException | SecurityException | IllegalArgumentException | IllegalAccessException e) {
+        } catch (NoSuchFieldException e) {
+            LOGGER.log(Level.FINEST, "Unable to get (thread, init context) map", e);
+        } catch (SecurityException e) {
+            LOGGER.log(Level.FINEST, "Unable to get (thread, init context) map", e);
+        } catch (IllegalArgumentException e) {
+            LOGGER.log(Level.FINEST, "Unable to get (thread, init context) map", e);
+        } catch (IllegalAccessException e) {
             LOGGER.log(Level.FINEST, "Unable to get (thread, init context) map", e);
         }
 
-        return null;
+		return null;
     }
 
     @SuppressWarnings("unchecked")
@@ -223,11 +229,17 @@ public class InitFacesContext extends NoOpFacesContext {
             initContextMap.setAccessible(true);
 
             return (Map<InitFacesContext, ServletContext>) initContextMap.get(null);
-        } catch (NoSuchFieldException | SecurityException | IllegalArgumentException | IllegalAccessException e) {
+        } catch (NoSuchFieldException e) {
+            LOGGER.log(Level.FINEST, "Unable to get (init context, servlet context) map", e);
+        } catch (SecurityException e) {
+            LOGGER.log(Level.FINEST, "Unable to get (init context, servlet context) map", e);
+        } catch (IllegalArgumentException e) {
+            LOGGER.log(Level.FINEST, "Unable to get (init context, servlet context) map", e);
+        } catch (IllegalAccessException e) {
             LOGGER.log(Level.FINEST, "Unable to get (init context, servlet context) map", e);
         }
 
-        return null;
+		return null;
     }
 
     public static InitFacesContext getInstance(ServletContext servletContext) {

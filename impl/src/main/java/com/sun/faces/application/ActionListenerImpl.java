@@ -77,12 +77,16 @@ public class ActionListenerImpl implements ActionListener {
             }
 
             return invokeResult.toString();
-        } catch (ELException | NullPointerException e) {
+        } catch (ELException e) {
+            LOGGER.log(FINE, e, () -> e.getMessage());
+
+            throw new FacesException(expression.getExpressionString() + ": " + e.getMessage(), e);
+        } catch (NullPointerException e) {
             LOGGER.log(FINE, e, () -> e.getMessage());
 
             throw new FacesException(expression.getExpressionString() + ": " + e.getMessage(), e);
         }
-    }
+	}
 
     private void invokeNavigationHandling(FacesContext context, UIComponent source, MethodExpression expression, String outcome) {
         NavigationHandler navHandler = context.getApplication().getNavigationHandler();

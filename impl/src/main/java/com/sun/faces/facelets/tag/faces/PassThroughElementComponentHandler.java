@@ -57,11 +57,15 @@ public class PassThroughElementComponentHandler extends ComponentHandler {
         try {
             Class<?> clazz = Util.loadClass("com.sun.faces.component.PassthroughElement", this);
             result = (UIComponent) clazz.getDeclaredConstructor().newInstance();
-        } catch (IllegalArgumentException | ReflectiveOperationException | SecurityException cnfe) {
+        } catch (IllegalArgumentException cnfe) {
+            throw new FacesException(cnfe);
+        } catch (ReflectiveOperationException cnfe) {
+            throw new FacesException(cnfe);
+        } catch (SecurityException cnfe) {
             throw new FacesException(cnfe);
         }
 
-        return result;
+		return result;
     }
 
     @Override

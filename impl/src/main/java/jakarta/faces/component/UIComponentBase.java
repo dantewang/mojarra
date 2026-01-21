@@ -1379,13 +1379,23 @@ public abstract class UIComponentBase extends UIComponent {
                 Collection<Object> retCollection = null;
                 try {
                     retCollection = (Collection<Object>) mapOrCollection.getDeclaredConstructor().newInstance();
-                } catch (IllegalArgumentException | ReflectiveOperationException | SecurityException e) {
+                } catch (IllegalArgumentException e) {
+                    if (LOGGER.isLoggable(Level.SEVERE)) {
+                        LOGGER.log(Level.SEVERE, e.toString(), e);
+                    }
+                    throw new IllegalStateException("Unknown object type");
+                } catch (ReflectiveOperationException e) {
+                    if (LOGGER.isLoggable(Level.SEVERE)) {
+                        LOGGER.log(Level.SEVERE, e.toString(), e);
+                    }
+                    throw new IllegalStateException("Unknown object type");
+                } catch (SecurityException e) {
                     if (LOGGER.isLoggable(Level.SEVERE)) {
                         LOGGER.log(Level.SEVERE, e.toString(), e);
                     }
                     throw new IllegalStateException("Unknown object type");
                 }
-                for (int i = 1, len = stateList.size(); i < len; i++) {
+				for (int i = 1, len = stateList.size(); i < len; i++) {
                     try {
                         retCollection.add(stateList.get(i).restore(context));
                     } catch (ClassCastException cce) {
@@ -1401,13 +1411,23 @@ public abstract class UIComponentBase extends UIComponent {
                 Map<Object, Object> retMap = null;
                 try {
                     retMap = (Map<Object, Object>) mapOrCollection.getDeclaredConstructor().newInstance();
-                } catch (IllegalArgumentException | ReflectiveOperationException | SecurityException e) {
+                } catch (IllegalArgumentException e) {
+                    if (LOGGER.isLoggable(Level.SEVERE)) {
+                        LOGGER.log(Level.SEVERE, e.toString(), e);
+                    }
+                    throw new IllegalStateException("Unknown object type");
+                } catch (ReflectiveOperationException e) {
+                    if (LOGGER.isLoggable(Level.SEVERE)) {
+                        LOGGER.log(Level.SEVERE, e.toString(), e);
+                    }
+                    throw new IllegalStateException("Unknown object type");
+                } catch (SecurityException e) {
                     if (LOGGER.isLoggable(Level.SEVERE)) {
                         LOGGER.log(Level.SEVERE, e.toString(), e);
                     }
                     throw new IllegalStateException("Unknown object type");
                 }
-                for (int i = 1, len = stateList.size(); i < len; i += 2) {
+				for (int i = 1, len = stateList.size(); i < len; i += 2) {
                     try {
                         retMap.put(stateList.get(i).restore(context), stateList.get(i + 1).restore(context));
                     } catch (ClassCastException cce) {
@@ -2146,11 +2166,13 @@ public abstract class UIComponentBase extends UIComponent {
                         }
                     }
                 }
-            } catch (ClassCastException | NullPointerException unused) {
+            } catch (ClassCastException unused) {
+                return false;
+            } catch (NullPointerException unused) {
                 return false;
             }
 
-            return true;
+			return true;
         }
 
         @Override
@@ -2204,10 +2226,14 @@ public abstract class UIComponentBase extends UIComponent {
             Class<?> clazz = (Class<?>) in.readObject();
             try {
                 component = (UIComponent) clazz.getDeclaredConstructor().newInstance();
-            } catch (IllegalArgumentException | ReflectiveOperationException | SecurityException e) {
+            } catch (IllegalArgumentException e) {
+                throw new RuntimeException(e);
+            } catch (ReflectiveOperationException e) {
+                throw new RuntimeException(e);
+            } catch (SecurityException e) {
                 throw new RuntimeException(e);
             }
-            component.restoreState(FacesContext.getCurrentInstance(), in.readObject());
+			component.restoreState(FacesContext.getCurrentInstance(), in.readObject());
         }
     }
 

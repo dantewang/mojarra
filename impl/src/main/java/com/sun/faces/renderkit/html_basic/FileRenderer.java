@@ -85,11 +85,13 @@ public class FileRenderer extends TextRenderer {
             } else if (!submittedValues.isEmpty()) {
                 setSubmittedValue(component, submittedValues.iterator().next());
             }
-        } catch (IOException | ServletException ioe) {
+        } catch (IOException ioe) {
+            throw new FacesException(ioe);
+        } catch (ServletException ioe) {
             throw new FacesException(ioe);
         }
 
-    }
+	}
 
     // If we are in Project Stage Development mode, the parent form
     // must have an enctype of "multipart/form-data" for this component.

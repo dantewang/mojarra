@@ -674,12 +674,20 @@ public class ApplicationAssociate {
                     if (LOGGER.isLoggable(FINE)) {
                         LOGGER.log(FINE, "Successfully Loaded Decorator: {0}", decorator);
                     }
-                } catch (ReflectiveOperationException | IllegalArgumentException | SecurityException e) {
+                } catch (ReflectiveOperationException e) {
+                    if (LOGGER.isLoggable(SEVERE)) {
+                        LOGGER.log(SEVERE, "Error Loading Decorator: " + decorator, e);
+                    }
+                } catch (IllegalArgumentException e) {
+                    if (LOGGER.isLoggable(SEVERE)) {
+                        LOGGER.log(SEVERE, "Error Loading Decorator: " + decorator, e);
+                    }
+                } catch (SecurityException e) {
                     if (LOGGER.isLoggable(SEVERE)) {
                         LOGGER.log(SEVERE, "Error Loading Decorator: " + decorator, e);
                     }
                 }
-            }
+			}
         }
     }
 

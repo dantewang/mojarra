@@ -99,12 +99,20 @@ public class InjectionApplicationFactory extends ApplicationFactory {
                 if (LOGGER.isLoggable(FINE)) {
                     LOGGER.log(FINE, "Unable to find private field named 'defaultApplication' in jakarta.faces.application.Application.");
                 }
-            } catch (SecurityException | IllegalArgumentException | IllegalAccessException e) {
+            } catch (SecurityException e) {
+                if (LOGGER.isLoggable(SEVERE)) {
+                    LOGGER.log(SEVERE, e.toString(), e);
+                }
+            } catch (IllegalArgumentException e) {
+                if (LOGGER.isLoggable(SEVERE)) {
+                    LOGGER.log(SEVERE, e.toString(), e);
+                }
+            } catch (IllegalAccessException e) {
                 if (LOGGER.isLoggable(SEVERE)) {
                     LOGGER.log(SEVERE, e.toString(), e);
                 }
             }
-        }
+		}
     }
 
     // ------------------------------------------------- Package private Methods

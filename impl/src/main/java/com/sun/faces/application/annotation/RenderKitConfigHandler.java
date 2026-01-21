@@ -96,10 +96,14 @@ public class RenderKitConfigHandler implements ConfigAnnotationHandler {
                         }
                         rk.addRenderer(ra.componentFamily(), ra.rendererType(),
                                 (Renderer) rClass.getDeclaredConstructor().newInstance());
-                    } catch (IllegalStateException | ReflectiveOperationException | SecurityException e) {
+                    } catch (IllegalStateException e) {
+                        throw new FacesException(e);
+                    } catch (ReflectiveOperationException e) {
+                        throw new FacesException(e);
+                    } catch (SecurityException e) {
                         throw new FacesException(e);
                     }
-                } else if (entry.getValue() instanceof FacesBehaviorRenderer) {
+				} else if (entry.getValue() instanceof FacesBehaviorRenderer) {
                     FacesBehaviorRenderer bra = (FacesBehaviorRenderer) entry.getValue();
                     try {
                         RenderKit rk = rkf.getRenderKit(ctx, bra.renderKitId());
@@ -109,10 +113,14 @@ public class RenderKitConfigHandler implements ConfigAnnotationHandler {
                         }
                         rk.addClientBehaviorRenderer(bra.rendererType(),
                                 (ClientBehaviorRenderer) rClass.getDeclaredConstructor().newInstance());
-                    } catch (IllegalStateException | ReflectiveOperationException | SecurityException e) {
+                    } catch (IllegalStateException e) {
+                        throw new FacesException(e);
+                    } catch (ReflectiveOperationException e) {
+                        throw new FacesException(e);
+                    } catch (SecurityException e) {
                         throw new FacesException(e);
                     }
-                }
+				}
             }
         }
 

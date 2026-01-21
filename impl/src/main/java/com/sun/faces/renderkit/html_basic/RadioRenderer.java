@@ -224,13 +224,17 @@ public class RadioRenderer extends SelectManyCheckboxListRenderer implements Com
 
         try {
             newValue = context.getApplication().getExpressionFactory().coerceToType(itemValue, type);
-        } catch (ELException | IllegalArgumentException e) {
+        } catch (ELException e) {
+            // If coerceToType fails, per the docs it should throw an ELException, however, SJAS 9.0 and 9.0u1 will
+            // throw an IllegalArgumentException instead (see https://java.net/jira/browse/GLASSFISH-1527).
+            newValue = itemValue;
+        } catch (IllegalArgumentException e) {
             // If coerceToType fails, per the docs it should throw an ELException, however, SJAS 9.0 and 9.0u1 will
             // throw an IllegalArgumentException instead (see https://java.net/jira/browse/GLASSFISH-1527).
             newValue = itemValue;
         }
 
-        return newValue != null && newValue.equals(currentValue);
+		return newValue != null && newValue.equals(currentValue);
     }
 
     @Override

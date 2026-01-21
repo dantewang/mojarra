@@ -377,7 +377,29 @@ public class DateTimeConverter implements Converter, PartialStateHolder {
 
             // Perform the requested parsing
             returnValue = parser.parse(value);
-        } catch (ParseException | DateTimeParseException e) {
+        } catch (ParseException e) {
+            if (type != null) {
+                switch (type) {
+                case "date":
+                case "localDate":
+                    throw new ConverterException(
+                        getMessage(context, DATE_ID, value, parser.formatNow(), getLabel(context, component)),
+                        e);
+                case "time":
+                case "localTime":
+                case "offsetTime":
+                    throw new ConverterException(
+                        getMessage(context, TIME_ID, value, parser.formatNow(), getLabel(context, component)),
+                        e);
+                case "both":
+                case "localDateTime":
+                case "offsetDateTime":
+                case "zonedDateTime":
+                    throw new ConverterException(getMessage(context, DATETIME_ID, value, parser.formatNow(),
+                        getLabel(context, component)), e);
+                }
+            }
+        } catch (DateTimeParseException e) {
             if (type != null) {
                 switch (type) {
                 case "date":

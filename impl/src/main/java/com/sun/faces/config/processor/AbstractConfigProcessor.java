@@ -245,10 +245,16 @@ public abstract class AbstractConfigProcessor implements ConfigProcessor {
                         buildMessage(format("Class ''{0}'' is missing a runtime dependency: {1}", className, ncdfe.toString()), source), ncdfe);
             } catch (ClassCastException cce) {
                 throw new ConfigurationException(buildMessage(format("Class ''{0}'' is not an instance of ''{1}''", className, rootType), source), cce);
-            } catch (IllegalArgumentException | ReflectiveOperationException | SecurityException | FacesException e) {
+            } catch (IllegalArgumentException e) {
+                throw new ConfigurationException(buildMessage(format("Unable to create a new instance of ''{0}'': {1}", className, e.toString()), source), e);
+            } catch (ReflectiveOperationException e) {
+                throw new ConfigurationException(buildMessage(format("Unable to create a new instance of ''{0}'': {1}", className, e.toString()), source), e);
+            } catch (SecurityException e) {
+                throw new ConfigurationException(buildMessage(format("Unable to create a new instance of ''{0}'': {1}", className, e.toString()), source), e);
+            } catch (FacesException e) {
                 throw new ConfigurationException(buildMessage(format("Unable to create a new instance of ''{0}'': {1}", className, e.toString()), source), e);
             }
-        }
+		}
 
         return returnObject;
     }

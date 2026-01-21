@@ -133,7 +133,8 @@ public final class ExpiringConcurrentCache<K, V> extends ConcurrentCache<K, V> {
 
                     return true;
                 }
-            } catch (TimeoutException | ExecutionException ce) {
+            } catch (TimeoutException ce) {
+            } catch (ExecutionException ce) {
             } catch (CancellationException ce) {
                 if (_LOGGER.isLoggable(Level.SEVERE)) {
                     _LOGGER.log(Level.SEVERE, ce.toString(), ce);

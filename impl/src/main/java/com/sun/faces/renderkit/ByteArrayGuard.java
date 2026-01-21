@@ -115,14 +115,43 @@ public final class ByteArrayGuard {
             byte[] macBytes = encryptMac.doFinal(encdata);
             byte[] tmp = concatBytes(macBytes, iv);
             securedata = concatBytes(tmp, encdata);
-        } catch (NoSuchAlgorithmException | NoSuchPaddingException | InvalidKeyException | InvalidAlgorithmParameterException | IllegalStateException
-                | IllegalBlockSizeException | BadPaddingException e) {
+        } catch (NoSuchAlgorithmException e) {
+            if (LOGGER.isLoggable(Level.SEVERE)) {
+                LOGGER.log(Level.SEVERE, "Unexpected exception initializing encryption." + "  No encryption will be performed.", e);
+            }
+            return null;
+        } catch (NoSuchPaddingException e) {
+            if (LOGGER.isLoggable(Level.SEVERE)) {
+                LOGGER.log(Level.SEVERE, "Unexpected exception initializing encryption." + "  No encryption will be performed.", e);
+            }
+            return null;
+        } catch (InvalidKeyException e) {
+            if (LOGGER.isLoggable(Level.SEVERE)) {
+                LOGGER.log(Level.SEVERE, "Unexpected exception initializing encryption." + "  No encryption will be performed.", e);
+            }
+            return null;
+        } catch (InvalidAlgorithmParameterException e) {
+            if (LOGGER.isLoggable(Level.SEVERE)) {
+                LOGGER.log(Level.SEVERE, "Unexpected exception initializing encryption." + "  No encryption will be performed.", e);
+            }
+            return null;
+        } catch (IllegalStateException e) {
+            if (LOGGER.isLoggable(Level.SEVERE)) {
+                LOGGER.log(Level.SEVERE, "Unexpected exception initializing encryption." + "  No encryption will be performed.", e);
+            }
+            return null;
+        } catch (IllegalBlockSizeException e) {
+            if (LOGGER.isLoggable(Level.SEVERE)) {
+                LOGGER.log(Level.SEVERE, "Unexpected exception initializing encryption." + "  No encryption will be performed.", e);
+            }
+            return null;
+        } catch (BadPaddingException e) {
             if (LOGGER.isLoggable(Level.SEVERE)) {
                 LOGGER.log(Level.SEVERE, "Unexpected exception initializing encryption." + "  No encryption will be performed.", e);
             }
             return null;
         }
-        return securedata;
+		return securedata;
     }
 
     /**
@@ -166,12 +195,29 @@ public final class ByteArrayGuard {
                 System.err.println("ERROR: MAC did not verify!");
                 return null;
             }
-        } catch (NoSuchAlgorithmException | NoSuchPaddingException | InvalidKeyException | InvalidAlgorithmParameterException | IllegalStateException
-                | IllegalBlockSizeException | BadPaddingException e) {
+        } catch (NoSuchAlgorithmException e) {
+            System.err.println("ERROR: Decrypting:" + e.getCause());
+            return null; // Signal to Faces runtime
+        } catch (NoSuchPaddingException e) {
+            System.err.println("ERROR: Decrypting:" + e.getCause());
+            return null; // Signal to Faces runtime
+        } catch (InvalidKeyException e) {
+            System.err.println("ERROR: Decrypting:" + e.getCause());
+            return null; // Signal to Faces runtime
+        } catch (InvalidAlgorithmParameterException e) {
+            System.err.println("ERROR: Decrypting:" + e.getCause());
+            return null; // Signal to Faces runtime
+        } catch (IllegalStateException e) {
+            System.err.println("ERROR: Decrypting:" + e.getCause());
+            return null; // Signal to Faces runtime
+        } catch (IllegalBlockSizeException e) {
+            System.err.println("ERROR: Decrypting:" + e.getCause());
+            return null; // Signal to Faces runtime
+        } catch (BadPaddingException e) {
             System.err.println("ERROR: Decrypting:" + e.getCause());
             return null; // Signal to Faces runtime
         }
-    }
+	}
 
     private boolean areArrayEqualsConstantTime(byte[] array1, byte[] array2) {
         boolean result = true;

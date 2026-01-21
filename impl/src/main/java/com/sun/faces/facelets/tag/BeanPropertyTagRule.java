@@ -56,10 +56,12 @@ final class BeanPropertyTagRule extends MetaRule {
                 method.invoke(instance, value);
             } catch (InvocationTargetException e) {
                 throw new TagAttributeException(attribute, e.getCause());
-            } catch (IllegalAccessException | IllegalArgumentException e) {
+            } catch (IllegalAccessException e) {
+                throw new TagAttributeException(attribute, e);
+            } catch (IllegalArgumentException e) {
                 throw new TagAttributeException(attribute, e);
             }
-        }
+		}
 
     }
 
@@ -83,10 +85,12 @@ final class BeanPropertyTagRule extends MetaRule {
                 method.invoke(instance, attribute.getObject(ctx, type));
             } catch (InvocationTargetException e) {
                 throw new TagAttributeException(attribute, e.getCause());
-            } catch (IllegalAccessException | IllegalArgumentException e) {
+            } catch (IllegalAccessException e) {
+                throw new TagAttributeException(attribute, e);
+            } catch (IllegalArgumentException e) {
                 throw new TagAttributeException(attribute, e);
             }
-        }
+		}
     }
 
     public final static BeanPropertyTagRule Instance = new BeanPropertyTagRule();

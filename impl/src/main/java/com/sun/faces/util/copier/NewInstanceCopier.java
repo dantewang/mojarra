@@ -31,9 +31,11 @@ public class NewInstanceCopier implements Copier {
     public Object copy(Object object) {
         try {
             return object.getClass().newInstance();
-        } catch (InstantiationException | IllegalAccessException e) {
+        } catch (InstantiationException e) {
+            throw new IllegalStateException(e);
+        } catch (IllegalAccessException e) {
             throw new IllegalStateException(e);
         }
-    }
+	}
 
 }

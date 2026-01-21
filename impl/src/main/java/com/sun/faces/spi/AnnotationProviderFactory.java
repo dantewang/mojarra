@@ -102,10 +102,19 @@ public class AnnotationProviderFactory {
         try {
             c = DEFAULT_ANNOTATION_PROVIDER.getDeclaredConstructor(ServletContext.class);
             result = (AnnotationProvider) c.newInstance(sc);
-        } catch (NoSuchMethodException | SecurityException | InstantiationException | IllegalAccessException | IllegalArgumentException
-                | InvocationTargetException e2) {
+        } catch (NoSuchMethodException e2) {
+            throw new FacesException(e2);
+        } catch (SecurityException e2) {
+            throw new FacesException(e2);
+        } catch (InstantiationException e2) {
+            throw new FacesException(e2);
+        } catch (IllegalAccessException e2) {
+            throw new FacesException(e2);
+        } catch (IllegalArgumentException e2) {
+            throw new FacesException(e2);
+        } catch (InvocationTargetException e2) {
             throw new FacesException(e2);
         }
-        return result;
+		return result;
     }
 }

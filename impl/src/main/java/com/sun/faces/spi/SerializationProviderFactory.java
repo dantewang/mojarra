@@ -94,13 +94,23 @@ public class SerializationProviderFactory {
                 if (LOGGER.isLoggable(Level.SEVERE)) {
                     LOGGER.log(Level.SEVERE, "faces.spi.serialization.provider_not_found", new Object[] { className });
                 }
-            } catch (IllegalArgumentException | ReflectiveOperationException | SecurityException ie) {
+            } catch (IllegalArgumentException ie) {
+                if (LOGGER.isLoggable(Level.SEVERE)) {
+                    LOGGER.log(Level.SEVERE, "faces.spi.serialization.provider_cannot_instantiate", new Object[] { className });
+                    LOGGER.log(Level.SEVERE, "", ie);
+                }
+            } catch (ReflectiveOperationException ie) {
+                if (LOGGER.isLoggable(Level.SEVERE)) {
+                    LOGGER.log(Level.SEVERE, "faces.spi.serialization.provider_cannot_instantiate", new Object[] { className });
+                    LOGGER.log(Level.SEVERE, "", ie);
+                }
+            } catch (SecurityException ie) {
                 if (LOGGER.isLoggable(Level.SEVERE)) {
                     LOGGER.log(Level.SEVERE, "faces.spi.serialization.provider_cannot_instantiate", new Object[] { className });
                     LOGGER.log(Level.SEVERE, "", ie);
                 }
             }
-        }
+		}
 
         return provider;
     }

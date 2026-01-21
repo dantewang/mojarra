@@ -90,10 +90,14 @@ public abstract class ValueHolderTestCaseBase extends UIComponentBaseTestCase {
                                     .newInstance();
                             vh = (ValueHolder) newComp;
 
-                        } catch (IllegalArgumentException | ReflectiveOperationException | SecurityException ex) {
+                        } catch (IllegalArgumentException ex) {
+                            fail("Can't instantiate class of " + ValueHolderTestCaseBase.this.component.getClass().getName());
+                        } catch (ReflectiveOperationException ex) {
+                            fail("Can't instantiate class of " + ValueHolderTestCaseBase.this.component.getClass().getName());
+                        } catch (SecurityException ex) {
                             fail("Can't instantiate class of " + ValueHolderTestCaseBase.this.component.getClass().getName());
                         }
-                    }
+					}
                     try {
                         boolean result = doTestAttributesTransparency(vh, newComp);
                         outcomes[threadNum] = Boolean.valueOf(result);

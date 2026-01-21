@@ -200,11 +200,13 @@ public class ConfigManager {
 
         try {
             return scanTask != null ? scanTask.get() : emptyMap();
-        } catch (InterruptedException | ExecutionException e) {
+        } catch (InterruptedException e) {
+            throw new FacesException(e);
+        } catch (ExecutionException e) {
             throw new FacesException(e);
         }
 
-    }
+	}
 
     public static void removeInstance(ServletContext servletContext) {
         servletContext.removeAttribute(CONFIG_MANAGER_INSTANCE_KEY);

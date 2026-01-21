@@ -73,10 +73,16 @@ public class EventInfo {
         if (toInvoke != null) {
             try {
                 return (SystemEvent) toInvoke.newInstance(source);
-            } catch (InstantiationException | IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {
+            } catch (InstantiationException e) {
+                throw new FacesException(e);
+            } catch (IllegalAccessException e) {
+                throw new FacesException(e);
+            } catch (IllegalArgumentException e) {
+                throw new FacesException(e);
+            } catch (InvocationTargetException e) {
                 throw new FacesException(e);
             }
-        }
+		}
         return null;
 
     }

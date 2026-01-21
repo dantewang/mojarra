@@ -110,14 +110,38 @@ public final class ByteArrayGuardAESCTR {
 
             // Base64 encode the encrypted bytes
             securedata = Base64.getEncoder().encodeToString(temp);
-        } catch (NoSuchAlgorithmException | NoSuchPaddingException | InvalidKeyException | InvalidAlgorithmParameterException | IllegalBlockSizeException
-                | BadPaddingException e) {
+        } catch (NoSuchAlgorithmException e) {
+            if (LOGGER.isLoggable(Level.SEVERE)) {
+                LOGGER.log(Level.SEVERE, "Unexpected exception initializing encryption." + "  No encryption will be performed.", e);
+            }
+            return null;
+        } catch (NoSuchPaddingException e) {
+            if (LOGGER.isLoggable(Level.SEVERE)) {
+                LOGGER.log(Level.SEVERE, "Unexpected exception initializing encryption." + "  No encryption will be performed.", e);
+            }
+            return null;
+        } catch (InvalidKeyException e) {
+            if (LOGGER.isLoggable(Level.SEVERE)) {
+                LOGGER.log(Level.SEVERE, "Unexpected exception initializing encryption." + "  No encryption will be performed.", e);
+            }
+            return null;
+        } catch (InvalidAlgorithmParameterException e) {
+            if (LOGGER.isLoggable(Level.SEVERE)) {
+                LOGGER.log(Level.SEVERE, "Unexpected exception initializing encryption." + "  No encryption will be performed.", e);
+            }
+            return null;
+        } catch (IllegalBlockSizeException e) {
+            if (LOGGER.isLoggable(Level.SEVERE)) {
+                LOGGER.log(Level.SEVERE, "Unexpected exception initializing encryption." + "  No encryption will be performed.", e);
+            }
+            return null;
+        } catch (BadPaddingException e) {
             if (LOGGER.isLoggable(Level.SEVERE)) {
                 LOGGER.log(Level.SEVERE, "Unexpected exception initializing encryption." + "  No encryption will be performed.", e);
             }
             return null;
         }
-        return securedata;
+		return securedata;
     }
 
     public String decrypt(String value) throws InvalidKeyException {
@@ -149,11 +173,18 @@ public final class ByteArrayGuardAESCTR {
                 }
             }
             return new String(plaindata, utf8);
-        } catch (NoSuchAlgorithmException | NoSuchPaddingException | InvalidAlgorithmParameterException | IllegalBlockSizeException
-                | BadPaddingException nsae) {
+        } catch (NoSuchAlgorithmException nsae) {
+            throw new InvalidKeyException(nsae);
+        } catch (NoSuchPaddingException nsae) {
+            throw new InvalidKeyException(nsae);
+        } catch (InvalidAlgorithmParameterException nsae) {
+            throw new InvalidKeyException(nsae);
+        } catch (IllegalBlockSizeException nsae) {
+            throw new InvalidKeyException(nsae);
+        } catch (BadPaddingException nsae) {
             throw new InvalidKeyException(nsae);
         }
-    }
+	}
 
     // --------------------------------------------------------- Private Methods
 

@@ -51,10 +51,12 @@ public class SerializationCopier implements Copier {
 
         try {
             return copyOutIn(object);
-        } catch (IOException | ClassNotFoundException e) {
+        } catch (IOException e) {
+            throw new IllegalArgumentException(SERIALIZATION_COPIER_ERROR);
+        } catch (ClassNotFoundException e) {
             throw new IllegalArgumentException(SERIALIZATION_COPIER_ERROR);
         }
-    }
+	}
 
     @SuppressWarnings("unchecked")
     private static <T> T copyOutIn(T object) throws ClassNotFoundException, IOException {

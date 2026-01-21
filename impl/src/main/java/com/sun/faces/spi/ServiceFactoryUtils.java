@@ -62,12 +62,23 @@ final class ServiceFactoryUtils {
                 throw new FacesException("Unable to find constructor accepting arguments: " + Arrays.toString(arguments));
             }
             return c.newInstance(arguments);
-        } catch (ClassNotFoundException | NoSuchMethodException | SecurityException | InstantiationException | IllegalAccessException | IllegalArgumentException
-                | InvocationTargetException e) {
+        } catch (ClassNotFoundException e) {
+            throw new FacesException(e);
+        } catch (NoSuchMethodException e) {
+            throw new FacesException(e);
+        } catch (SecurityException e) {
+            throw new FacesException(e);
+        } catch (InstantiationException e) {
+            throw new FacesException(e);
+        } catch (IllegalAccessException e) {
+            throw new FacesException(e);
+        } catch (IllegalArgumentException e) {
+            throw new FacesException(e);
+        } catch (InvocationTargetException e) {
             throw new FacesException(e);
         }
 
-    }
+	}
 
     static String[] getServiceEntries(String key) {
 

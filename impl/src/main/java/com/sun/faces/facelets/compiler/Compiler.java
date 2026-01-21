@@ -131,10 +131,14 @@ public abstract class Compiler {
         if (type != null) {
             try {
                 return ReflectionUtil.forName(type).getDeclaredConstructor().newInstance();
-            } catch (IllegalArgumentException | ReflectiveOperationException | SecurityException e) {
+            } catch (IllegalArgumentException e) {
+                throw new FaceletException("Could not instantiate feature[" + name + "]: " + type);
+            } catch (ReflectiveOperationException e) {
+                throw new FaceletException("Could not instantiate feature[" + name + "]: " + type);
+            } catch (SecurityException e) {
                 throw new FaceletException("Could not instantiate feature[" + name + "]: " + type);
             }
-        }
+		}
         return null;
     }
 

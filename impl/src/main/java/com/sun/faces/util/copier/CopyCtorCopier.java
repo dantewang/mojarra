@@ -39,11 +39,20 @@ public class CopyCtorCopier implements Copier {
 
             return copyConstructor.newInstance(object);
 
-        } catch (NoSuchMethodException | SecurityException | InstantiationException | IllegalAccessException | IllegalArgumentException
-                | InvocationTargetException e) {
+        } catch (NoSuchMethodException e) {
+            throw new IllegalStateException(e);
+        } catch (SecurityException e) {
+            throw new IllegalStateException(e);
+        } catch (InstantiationException e) {
+            throw new IllegalStateException(e);
+        } catch (IllegalAccessException e) {
+            throw new IllegalStateException(e);
+        } catch (IllegalArgumentException e) {
+            throw new IllegalStateException(e);
+        } catch (InvocationTargetException e) {
             throw new IllegalStateException(e);
         }
 
-    }
+	}
 
 }

@@ -130,13 +130,23 @@ public class InjectionProviderFactory {
                 if (LOGGER.isLoggable(Level.SEVERE)) {
                     LOGGER.log(Level.SEVERE, "faces.spi.injection.provider_not_found", new Object[] { className });
                 }
-            } catch (IllegalArgumentException | ReflectiveOperationException | SecurityException ie) {
+            } catch (IllegalArgumentException ie) {
+                if (LOGGER.isLoggable(Level.SEVERE)) {
+                    LOGGER.log(Level.SEVERE, "faces.spi.injection.provider_cannot_instantiate", new Object[] { className });
+                    LOGGER.log(Level.SEVERE, "", ie);
+                }
+            } catch (ReflectiveOperationException ie) {
+                if (LOGGER.isLoggable(Level.SEVERE)) {
+                    LOGGER.log(Level.SEVERE, "faces.spi.injection.provider_cannot_instantiate", new Object[] { className });
+                    LOGGER.log(Level.SEVERE, "", ie);
+                }
+            } catch (SecurityException ie) {
                 if (LOGGER.isLoggable(Level.SEVERE)) {
                     LOGGER.log(Level.SEVERE, "faces.spi.injection.provider_cannot_instantiate", new Object[] { className });
                     LOGGER.log(Level.SEVERE, "", ie);
                 }
             }
-        }
+		}
 
         // We weren't able to find a configured provider - check
         // to see if the PostConstruct and PreDestroy annotations

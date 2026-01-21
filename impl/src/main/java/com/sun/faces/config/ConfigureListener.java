@@ -554,7 +554,15 @@ public class ConfigureListener implements ServletRequestListener, HttpSessionLis
                 try {
                     SAXParser parser = factory.newSAXParser();
                     parser.parse(in, new WebXmlHandler());
-                } catch (ParserConfigurationException | SAXException | IOException e) {
+                } catch (ParserConfigurationException e) {
+                    warnProcessingError(e, context);
+                    facesServletPresent = true;
+                    return;
+                } catch (SAXException e) {
+                    warnProcessingError(e, context);
+                    facesServletPresent = true;
+                    return;
+                } catch (IOException e) {
                     warnProcessingError(e, context);
                     facesServletPresent = true;
                     return;
@@ -587,7 +595,15 @@ public class ConfigureListener implements ServletRequestListener, HttpSessionLis
                             conn.setUseCaches(false);
                             fragmentStream = conn.getInputStream();
                             factory.newSAXParser().parse(fragmentStream, new WebXmlHandler());
-                        } catch (IOException | ParserConfigurationException | SAXException e) {
+                        } catch (IOException e) {
+                            warnProcessingError(e, context);
+                            facesServletPresent = true;
+                            return;
+                        } catch (ParserConfigurationException e) {
+                            warnProcessingError(e, context);
+                            facesServletPresent = true;
+                            return;
+                        } catch (SAXException e) {
                             warnProcessingError(e, context);
                             facesServletPresent = true;
                             return;

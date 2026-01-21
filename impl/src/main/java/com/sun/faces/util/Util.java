@@ -249,11 +249,15 @@ public class Util {
         if (instance == null && type != null) {
             try {
                 instance = ReflectionUtils.newInstance((String) type.getValue(faces.getELContext()));
-            } catch (IllegalArgumentException | ReflectiveOperationException | SecurityException e) {
+            } catch (IllegalArgumentException e) {
+                throw new AbortProcessingException(e.getMessage(), e);
+            } catch (ReflectiveOperationException e) {
+                throw new AbortProcessingException(e.getMessage(), e);
+            } catch (SecurityException e) {
                 throw new AbortProcessingException(e.getMessage(), e);
             }
 
-            if (binding != null) {
+			if (binding != null) {
                 binding.setValue(faces.getELContext(), instance);
             }
         }
@@ -349,10 +353,14 @@ public class Util {
     public static <T> T newInstance(Class<?> clazz) {
         try {
             return (T) clazz.getDeclaredConstructor().newInstance();
-        } catch (IllegalArgumentException | ReflectiveOperationException | SecurityException e) {
+        } catch (IllegalArgumentException e) {
+            throw new IllegalStateException(e.getMessage(), e);
+        } catch (ReflectiveOperationException e) {
+            throw new IllegalStateException(e.getMessage(), e);
+        } catch (SecurityException e) {
             throw new IllegalStateException(e.getMessage(), e);
         }
-    }
+	}
 
     public static ClassLoader getCurrentLoader(Object fallbackClass) {
         ClassLoader loader = getContextClassLoader();
@@ -799,12 +807,24 @@ public class Util {
             if (method != null) {
                 result = (Locale) method.invoke(null, localeStr);
             }
-        } catch (NoSuchMethodException | SecurityException | IllegalAccessException | IllegalArgumentException | InvocationTargetException throwable) {
+        } catch (NoSuchMethodException throwable) {
+            // if we are NOT running JavaSE 7 we end up here and we will
+            // default to the previous way of determining the Locale below.
+        } catch (SecurityException throwable) {
+            // if we are NOT running JavaSE 7 we end up here and we will
+            // default to the previous way of determining the Locale below.
+        } catch (IllegalAccessException throwable) {
+            // if we are NOT running JavaSE 7 we end up here and we will
+            // default to the previous way of determining the Locale below.
+        } catch (IllegalArgumentException throwable) {
+            // if we are NOT running JavaSE 7 we end up here and we will
+            // default to the previous way of determining the Locale below.
+        } catch (InvocationTargetException throwable) {
             // if we are NOT running JavaSE 7 we end up here and we will
             // default to the previous way of determining the Locale below.
         }
 
-        if (result == null || result.getLanguage().equals("")) {
+		if (result == null || result.getLanguage().equals("")) {
             String lang = null;
             String country = null;
             String variant = null;
@@ -930,10 +950,14 @@ public class Util {
                         result = obj.toString();
                     }
                 }
-            } catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {
+            } catch (IllegalAccessException e) {
+                throw new FacesException(e);
+            } catch (IllegalArgumentException e) {
+                throw new FacesException(e);
+            } catch (InvocationTargetException e) {
                 throw new FacesException(e);
             }
-        }
+		}
         return result;
     }
 
@@ -1371,7 +1395,8 @@ public class Util {
                         dbf.newDocumentBuilder().parse(stream));
             }
         } catch (MalformedURLException mue) {
-        } catch (XPathExpressionException | IOException xpee) {
+        } catch (XPathExpressionException xpee) {
+        } catch (IOException xpee) {
         } catch (Exception e) {
         } finally {
             if (stream != null) {
@@ -1415,7 +1440,8 @@ public class Util {
                 result = xpath.evaluate("string(/" + JakartaNamespaceContext.PREFIX + ":web-app/@version)", dbf.newDocumentBuilder().parse(stream));
             }
         } catch (MalformedURLException mue) {
-        } catch (XPathExpressionException | IOException xpee) {
+        } catch (XPathExpressionException xpee) {
+        } catch (IOException xpee) {
         } catch (Exception e) {
         } finally {
             if (stream != null) {
@@ -1473,10 +1499,10 @@ public class Util {
                     try {
                         CDI<Object> cdi = CDI.current();
                         result = cdi.getBeanManager();
+                    } catch (Exception e) {
+                    } catch (LinkageError e) {
                     }
-                    catch (Exception | LinkageError e) {
-                    }
-                }
+				}
             }
 
             if (result == null && facesContext != null) {

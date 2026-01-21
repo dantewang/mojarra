@@ -170,10 +170,12 @@ public class DbfFactory {
                 InputSource result;
                 try {
                     result = super.resolveEntity(publicId, null);
-                } catch (IOException | SAXException e) {
+                } catch (IOException e) {
+                    throw new SAXException(e);
+                } catch (SAXException e) {
                     throw new SAXException(e);
                 }
-                return result;
+				return result;
             }
 
             String grammarName = systemId.substring(systemId.lastIndexOf('/') + 1);
@@ -187,11 +189,13 @@ public class DbfFactory {
 
                 try {
                     source = super.resolveEntity(publicId, systemId);
-                } catch (IOException | SAXException e) {
+                } catch (IOException e) {
+                    throw new SAXException(e);
+                } catch (SAXException e) {
                     throw new SAXException(e);
                 }
 
-            } else {
+			} else {
 
                 try {
                     source = new InputSource(new URL(entityURL).openStream());

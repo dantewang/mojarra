@@ -215,10 +215,14 @@ public class ELUtils {
                     // jakarta.el.staticFieldELResolver
                     composite.addRootELResolver((ELResolver) newInstance("jakarta.el.StaticFieldELResolver"));
                 }
-            } catch (IllegalArgumentException | ReflectiveOperationException | SecurityException t) {
+            } catch (IllegalArgumentException t) {
+                // This is normal on containers that do not have these ELResolvers
+            } catch (ReflectiveOperationException t) {
+                // This is normal on containers that do not have these ELResolvers
+            } catch (SecurityException t) {
                 // This is normal on containers that do not have these ELResolvers
             }
-        }
+		}
     }
 
     public static Object evaluateValueExpression(ValueExpression expression, ELContext elContext) {

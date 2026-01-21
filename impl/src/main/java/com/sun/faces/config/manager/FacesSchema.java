@@ -363,8 +363,10 @@ public enum FacesSchema {
         public Schema loadSchema() {
             try {
                 return DbfFactory.loadSchema(resourceName, fileName);
-            } catch (SAXException | IOException e) {
+            } catch (SAXException e) {
+                throw new ConfigurationException(e);
+            } catch (IOException e) {
                 throw new ConfigurationException(e);
             }
-        }
+		}
     }

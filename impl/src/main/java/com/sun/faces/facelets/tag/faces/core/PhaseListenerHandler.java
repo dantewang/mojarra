@@ -66,10 +66,14 @@ public class PhaseListenerHandler extends TagHandlerImpl {
             if (instance == null && type != null) {
                 try {
                     instance = (PhaseListener) ReflectionUtil.forName(type).getDeclaredConstructor().newInstance();
-                } catch (IllegalArgumentException | ReflectiveOperationException | SecurityException e) {
+                } catch (IllegalArgumentException e) {
+                    throw new AbortProcessingException("Couldn't Lazily instantiate PhaseListener", e);
+                } catch (ReflectiveOperationException e) {
+                    throw new AbortProcessingException("Couldn't Lazily instantiate PhaseListener", e);
+                } catch (SecurityException e) {
                     throw new AbortProcessingException("Couldn't Lazily instantiate PhaseListener", e);
                 }
-                if (binding != null) {
+				if (binding != null) {
                     binding.setValue(faces.getELContext(), instance);
                 }
             }

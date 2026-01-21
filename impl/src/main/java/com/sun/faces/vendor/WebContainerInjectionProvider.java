@@ -79,7 +79,11 @@ public class WebContainerInjectionProvider implements InjectionProvider {
 
             try {
                 method.invoke(managedBean);
-            } catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {
+            } catch (IllegalAccessException e) {
+                throw new InjectionProviderException(e.getMessage(), e);
+            } catch (IllegalArgumentException e) {
+                throw new InjectionProviderException(e.getMessage(), e);
+            } catch (InvocationTargetException e) {
                 throw new InjectionProviderException(e.getMessage(), e);
             } finally {
                 method.setAccessible(accessible);

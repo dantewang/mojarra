@@ -103,11 +103,14 @@ class DeclarativeSystemEventListener implements ComponentSystemEventListener, Se
         final ELContext elContext = FacesContext.getCurrentInstance().getELContext();
         try {
             noArgListener.invoke(elContext, new Object[] {});
-        } catch (MethodNotFoundException | IllegalArgumentException mnfe) {
+        } catch (MethodNotFoundException mnfe) {
+            // Attempt to call public void method(ComponentSystemEvent event)
+            oneArgListener.invoke(elContext, new Object[] { event });
+        } catch (IllegalArgumentException mnfe) {
             // Attempt to call public void method(ComponentSystemEvent event)
             oneArgListener.invoke(elContext, new Object[] { event });
         }
-    }
+	}
 
     @Override
     public boolean equals(Object o) {

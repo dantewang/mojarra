@@ -257,10 +257,16 @@ public class FaceletFullStateManagementStrategy extends StateManagementStrategy 
             component.setId(treeNode.id);
 
             return component;
-        } catch (NullPointerException | IllegalArgumentException | ReflectiveOperationException | SecurityException e) {
+        } catch (NullPointerException e) {
+            throw new FacesException(e);
+        } catch (IllegalArgumentException e) {
+            throw new FacesException(e);
+        } catch (ReflectiveOperationException e) {
+            throw new FacesException(e);
+        } catch (SecurityException e) {
             throw new FacesException(e);
         }
-    }
+	}
 
     /**
      * Methods that takes care of pruning and re-adding an action to the dynamic action list.
